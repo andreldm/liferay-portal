@@ -62,7 +62,7 @@ AnalyticsConfiguration analyticsConfiguration = (AnalyticsConfiguration)request.
 		</small>
 
 		<aui:button-row>
-			<aui:button disabled="true" primary="true" type="button" value="select-sites" />
+			<aui:button disabled="<%= true %>" primary="true" type="button" value="select-sites" />
 		</aui:button-row>
 	</aui:fieldset>
 
@@ -83,7 +83,7 @@ AnalyticsConfiguration analyticsConfiguration = (AnalyticsConfiguration)request.
 		</small>
 
 		<aui:button-row>
-			<aui:button disabled="true" primary="true" type="button" value="select-contacts" />
+			<aui:button disabled="<%= true %>" primary="true" type="button" value="select-contacts" />
 		</aui:button-row>
 	</aui:fieldset>
 </div>

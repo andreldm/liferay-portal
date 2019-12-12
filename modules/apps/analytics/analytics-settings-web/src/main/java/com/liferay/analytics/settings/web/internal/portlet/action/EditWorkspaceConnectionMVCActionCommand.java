@@ -85,10 +85,10 @@ public class EditWorkspaceConnectionMVCActionCommand
 
 		JSONObject tokenJSONObject = _createTokenJSONObject(actionRequest);
 
-		String dataSourceConnectionResponse = _connectDataSource(
+		String dataSourceConnectionJSON = _connectDataSource(
 			actionRequest, tokenJSONObject);
 
-		_updateCompanyPreferences(actionRequest, dataSourceConnectionResponse);
+		_updateCompanyPreferences(actionRequest, dataSourceConnectionJSON);
 
 		_updateConfigurationProperties(
 			actionRequest, configurationProperties, tokenJSONObject);
@@ -218,7 +218,7 @@ public class EditWorkspaceConnectionMVCActionCommand
 	}
 
 	private void _updateCompanyPreferences(
-			ActionRequest actionRequest, String dataSourceConnectionResponse)
+			ActionRequest actionRequest, String dataSourceConnectionJSON)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
@@ -227,7 +227,7 @@ public class EditWorkspaceConnectionMVCActionCommand
 		UnicodeProperties unicodeProperties = new UnicodeProperties(true);
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
-			dataSourceConnectionResponse);
+			dataSourceConnectionJSON);
 
 		Iterator<String> keys = jsonObject.keys();
 

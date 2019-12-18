@@ -14,11 +14,14 @@
 
 package com.liferay.analytics.settings.web.internal.portlet.action;
 
+import com.liferay.analytics.settings.web.internal.util.AnalyticsSettingsUtil;
 import com.liferay.configuration.admin.constants.ConfigurationAdminPortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.CompanyService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -27,6 +30,10 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.util.Dictionary;
 
 import javax.portlet.ActionRequest;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -48,7 +55,7 @@ public class EditSyncedSitesMVCActionCommand
 	protected void updateConfigurationProperties(
 			ActionRequest actionRequest,
 			Dictionary<String, Object> configurationProperties)
-		throws PortalException {
+		throws Exception {
 
 		String siteReportingGrouping = ParamUtil.getString(
 			actionRequest, "siteReportingGrouping");
@@ -60,11 +67,47 @@ public class EditSyncedSitesMVCActionCommand
 		configurationProperties.put("syncedGroupIds", syncedGroupIds);
 
 		_updateCompanyPreferences(actionRequest, syncedGroupIds);
+
+		_notifyAnalyticsCloud(actionRequest, syncedGroupIds);
+	}
+
+	private void _notifyAnalyticsCloud(
+			ActionRequest actionRequest, String[] syncedGroupIds)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		if (!AnalyticsSettingsUtil.isAnalyticsEnabled(
+				themeDisplay.getCompanyId())) {
+
+			return;
+		}
+
+		boolean sitesSelected = true;
+
+		if (ArrayUtil.isEmpty(syncedGroupIds)) {
+			sitesSelected = false;
+		}
+
+		HttpResponse httpResponse = AnalyticsSettingsUtil.doPut(
+			JSONUtil.put("sitesSelected", sitesSelected),
+			themeDisplay.getCompanyId(),
+			String.format(
+				"api/1.0/data-sources/%s/details",
+				AnalyticsSettingsUtil.getAsahFaroBackendDataSourceId(
+					themeDisplay.getCompanyId())));
+
+		StatusLine statusLine = httpResponse.getStatusLine();
+
+		if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
+			throw new PortalException("Invalid token");
+		}
 	}
 
 	private void _updateCompanyPreferences(
 			ActionRequest actionRequest, String[] syncedGroupIds)
-		throws PortalException {
+		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);

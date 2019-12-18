@@ -15,6 +15,7 @@
 package com.liferay.analytics.settings.web.internal.portlet.action;
 
 import com.liferay.analytics.settings.configuration.AnalyticsConfiguration;
+import com.liferay.analytics.settings.web.internal.util.AnalyticsSettingsUtil;
 import com.liferay.configuration.admin.constants.ConfigurationAdminPortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -27,7 +28,6 @@ import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -39,6 +39,7 @@ import java.util.Objects;
 
 import javax.portlet.ActionRequest;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -166,40 +167,17 @@ public class EditWorkspaceConnectionMVCActionCommand
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		String liferayAnalyticsDataSourceId = PrefsPropsUtil.getString(
-			themeDisplay.getCompanyId(), "liferayAnalyticsDataSourceId");
+		HttpResponse httpResponse = AnalyticsSettingsUtil.doPost(
+			null, themeDisplay.getCompanyId(),
+			String.format(
+				"api/1.0/data-sources/%s/disconnect",
+				AnalyticsSettingsUtil.getAsahFaroBackendDataSourceId(
+					themeDisplay.getCompanyId())));
 
-		String liferayAnalyticsFaroBackendSecuritySignature =
-			PrefsPropsUtil.getString(
-				themeDisplay.getCompanyId(),
-				"liferayAnalyticsFaroBackendSecuritySignature");
+		StatusLine statusLine = httpResponse.getStatusLine();
 
-		String liferayAnalyticsFaroBackendURL = PrefsPropsUtil.getString(
-			themeDisplay.getCompanyId(), "liferayAnalyticsFaroBackendURL");
-
-		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-
-		try (CloseableHttpClient closeableHttpClient =
-				httpClientBuilder.build()) {
-
-			HttpPost httpPost = new HttpPost(
-				String.format(
-					"%s/api/1.0/data-sources/%s/disconnect",
-					liferayAnalyticsFaroBackendURL,
-					liferayAnalyticsDataSourceId));
-
-			httpPost.setHeader(
-				"OSB-Asah-Faro-Backend-Security-Signature",
-				liferayAnalyticsFaroBackendSecuritySignature);
-
-			CloseableHttpResponse closeableHttpResponse =
-				closeableHttpClient.execute(httpPost);
-
-			StatusLine statusLine = closeableHttpResponse.getStatusLine();
-
-			if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
-				throw new PortalException("Failed to disconnected data source");
-			}
+		if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
+			throw new PortalException("Failed to disconnected data source");
 		}
 	}
 

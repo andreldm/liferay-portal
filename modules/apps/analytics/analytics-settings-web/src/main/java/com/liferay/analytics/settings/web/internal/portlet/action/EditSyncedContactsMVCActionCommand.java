@@ -14,29 +14,23 @@
 
 package com.liferay.analytics.settings.web.internal.portlet.action;
 
+import com.liferay.analytics.settings.web.internal.util.AnalyticsSettingsUtil;
 import com.liferay.configuration.admin.constants.ConfigurationAdminPortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Dictionary;
 
 import javax.portlet.ActionRequest;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -89,18 +83,8 @@ public class EditSyncedContactsMVCActionCommand
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		String liferayAnalyticsDataSourceId = PrefsPropsUtil.getString(
-			themeDisplay.getCompanyId(), "liferayAnalyticsDataSourceId");
-		String liferayAnalyticsFaroBackendSecuritySignature =
-			PrefsPropsUtil.getString(
-				themeDisplay.getCompanyId(),
-				"liferayAnalyticsFaroBackendSecuritySignature");
-		String liferayAnalyticsFaroBackendURL = PrefsPropsUtil.getString(
-			themeDisplay.getCompanyId(), "liferayAnalyticsFaroBackendURL");
-
-		if (Validator.isNull(liferayAnalyticsDataSourceId) ||
-			Validator.isNull(liferayAnalyticsFaroBackendSecuritySignature) ||
-			Validator.isNull(liferayAnalyticsFaroBackendURL)) {
+		if (!AnalyticsSettingsUtil.isAnalyticsEnabled(
+				themeDisplay.getCompanyId())) {
 
 			return;
 		}
@@ -113,35 +97,18 @@ public class EditSyncedContactsMVCActionCommand
 			contactsSelected = false;
 		}
 
-		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+		HttpResponse httpResponse = AnalyticsSettingsUtil.doPut(
+			JSONUtil.put("contactsSelected", contactsSelected),
+			themeDisplay.getCompanyId(),
+			String.format(
+				"api/1.0/data-sources/%s/details",
+				AnalyticsSettingsUtil.getAsahFaroBackendDataSourceId(
+					themeDisplay.getCompanyId())));
 
-		try (CloseableHttpClient closeableHttpClient =
-				httpClientBuilder.build()) {
+		StatusLine statusLine = httpResponse.getStatusLine();
 
-			HttpPut httpPut = new HttpPut(
-				String.format(
-					"%s/api/1.0/data-sources/%s/details",
-					liferayAnalyticsFaroBackendURL,
-					liferayAnalyticsDataSourceId));
-
-			JSONObject bodyJSONObject = JSONUtil.put(
-				"contactsSelected", contactsSelected);
-
-			httpPut.setEntity(new StringEntity(bodyJSONObject.toString()));
-
-			httpPut.setHeader("Content-type", "application/json");
-			httpPut.setHeader(
-				"OSB-Asah-Faro-Backend-Security-Signature",
-				liferayAnalyticsFaroBackendSecuritySignature);
-
-			CloseableHttpResponse closeableHttpResponse =
-				closeableHttpClient.execute(httpPut);
-
-			StatusLine statusLine = closeableHttpResponse.getStatusLine();
-
-			if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
-				throw new PortalException("Invalid token");
-			}
+		if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
+			throw new PortalException("Invalid token");
 		}
 	}
 

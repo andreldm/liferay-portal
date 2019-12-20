@@ -71,16 +71,6 @@
 			/>
 		</liferay-ui:search-container>
 
-		<h3 class="autofit-row">
-			<span class="autofit-col autofit-col-expand">
-				<liferay-ui:message key="site-reporting-grouping" />
-			</span>
-		</h3>
-
-		<aui:input checked="<%= true %>" helpMessage="flat-site-reporting-grouping-help" label="separate-synced-sites-into-individual-site-reports-in-analytics-cloud" name="siteReportingGrouping" type="radio" value="flat" />
-
-		<aui:input helpMessage="aggregate-site-reporting-grouping-help" label="group-all-synced-sites-into-one-site-report-in-analytics-cloud" name="siteReportingGrouping" type="radio" value="aggregate" />
-
 		<aui:button-row>
 			<aui:button type="submit" value="save-and-sync" />
 		</aui:button-row>

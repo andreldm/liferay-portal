@@ -50,13 +50,9 @@ public class EditSyncedSitesMVCActionCommand
 			Dictionary<String, Object> configurationProperties)
 		throws PortalException {
 
-		String siteReportingGrouping = ParamUtil.getString(
-			actionRequest, "siteReportingGrouping");
 		String[] syncedGroupIds = ParamUtil.getStringValues(
 			actionRequest, "rowIds");
 
-		configurationProperties.put(
-			"siteReportingGrouping", siteReportingGrouping);
 		configurationProperties.put("syncedGroupIds", syncedGroupIds);
 
 		_updateCompanyPreferences(actionRequest, syncedGroupIds);

@@ -20,10 +20,8 @@
 AnalyticsConfiguration analyticsConfiguration = (AnalyticsConfiguration)request.getAttribute(AnalyticsSettingsWebKeys.ANALYTICS_CONFIGURATION);
 
 boolean connected = false;
-
 String[] syncedGroupIds = new String[0];
 String token = "";
-
 long totalContactsSelected = 0;
 
 if (analyticsConfiguration != null) {

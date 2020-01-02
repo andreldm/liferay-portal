@@ -52,6 +52,12 @@
 					name="site-name"
 					value="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>"
 				/>
+
+				<liferay-ui:search-container-column-text
+					cssClass="table-cell-expand"
+					name="site-friendly-url"
+					value="<%= HtmlUtil.escape(group.getFriendlyURL()) %>"
+				/>
 			</liferay-ui:search-container-row>
 
 			<liferay-ui:search-iterator

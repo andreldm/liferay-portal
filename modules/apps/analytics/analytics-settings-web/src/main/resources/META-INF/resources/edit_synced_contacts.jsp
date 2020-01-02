@@ -45,7 +45,7 @@ Set<String> syncedUserGroupIds = SetUtil.fromArray(analyticsConfiguration.synced
 				<liferay-ui:message key="sync-all-contacts-help" />
 			</div>
 
-			<label class="mb-4 mt-3 toggle-switch">
+			<label class="mb-5 mt-3 toggle-switch">
 				<input class="toggle-switch-check" name="<portlet:namespace />syncAllContacts" type="checkbox" <%= syncAllContacts ? "checked" : "" %> />
 
 				<span aria-hidden="true" class="toggle-switch-bar">
@@ -66,63 +66,57 @@ Set<String> syncedUserGroupIds = SetUtil.fromArray(analyticsConfiguration.synced
 				<liferay-ui:message key="sync-by-user-groups-and-organizations-help" />
 			</div>
 
-			<ul class="list-group mt-4">
-				<portlet:renderURL var="createUserGroupURL">
-					<portlet:param name="mvcRenderCommandName" value="/analytics_settings/edit_synced_contacts_groups" />
-					<portlet:param name="redirect" value="<%= currentURL %>" />
-				</portlet:renderURL>
+			<portlet:renderURL var="createUserGroupURL">
+				<portlet:param name="mvcRenderCommandName" value="/analytics_settings/edit_synced_contacts_groups" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+			</portlet:renderURL>
 
-				<a class="text-decoration-none" href=<%= createUserGroupURL %> />
-					<li class="list-group-item list-group-item-flex">
-						<div class="autofit-col">
-							<div class="sticker sticker-light sticker-rounded">
-								<liferay-ui:icon
-									icon="user"
-									markupView="lexicon"
-								/>
-							</div>
-						</div>
+			<a class="d-flex m-4 p-2 text-decoration-none" href=<%= createUserGroupURL %> />
+				<div class="pr-3">
+					<div class="bg-light sticker sticker-light sticker-rounded">
+						<liferay-ui:icon
+							icon="users"
+							markupView="lexicon"
+						/>
+					</div>
+				</div>
 
-						<div class="autofit-col">
-							<h4 class="list-group-title">
-								<liferay-ui:message key="sync-by-user-groups" />
-							</h4>
+				<div>
+					<p class="list-group-title">
+						<liferay-ui:message key="sync-by-user-groups" />
+					</p>
 
-							<p class="list-group-subtext">
-								<liferay-ui:message arguments='<%= syncAllContacts ? "all" : syncedUserGroupIds.size() %>' key="x-user-groups-selected" />
-							</p>
-						</div>
-					</li>
-				</a>
+					<small class="list-group-subtext">
+						<liferay-ui:message arguments='<%= syncAllContacts ? "all" : syncedUserGroupIds.size() %>' key="x-user-groups-selected" />
+					</small>
+				</div>
+			</a>
 
-				<portlet:renderURL var="createOrganizationsURL">
-					<portlet:param name="mvcRenderCommandName" value="/analytics_settings/edit_synced_organizations" />
-					<portlet:param name="redirect" value="<%= currentURL %>" />
-				</portlet:renderURL>
+			<portlet:renderURL var="createOrganizationsURL">
+				<portlet:param name="mvcRenderCommandName" value="/analytics_settings/edit_synced_organizations" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+			</portlet:renderURL>
 
-				<a class="text-decoration-none" href=<%= createOrganizationsURL %> />
-					<li class="list-group-item list-group-item-flex">
-						<div class="autofit-col">
-							<div class="sticker sticker-light sticker-rounded">
-								<liferay-ui:icon
-									icon="organizations"
-									markupView="lexicon"
-								/>
-							</div>
-						</div>
+			<a class="d-flex m-4 p-2 text-decoration-none" href=<%= createOrganizationsURL %> />
+				<div class="pr-3">
+					<div class="bg-light sticker sticker-light sticker-rounded">
+						<liferay-ui:icon
+							icon="organizations"
+							markupView="lexicon"
+						/>
+					</div>
+				</div>
 
-						<div class="autofit-col">
-							<h4 class="list-group-title">
-								<liferay-ui:message key="sync-by-organizations" />
-							</h4>
+				<div>
+					<p class="list-group-title">
+						<liferay-ui:message key="sync-by-organizations" />
+					</p>
 
-							<p class="list-group-subtext">
-								<liferay-ui:message arguments='<%= syncAllContacts ? "all" : syncedOrganizationIds.size() %>' key="x-organizations-selected" />
-							</p>
-						</div>
-					</li>
-				</a>
-			</ul>
+					<small class="list-group-subtext">
+						<liferay-ui:message arguments='<%= syncAllContacts ? "all" : syncedOrganizationIds.size() %>' key="x-organizations-selected" />
+					</small>
+				</div>
+			</a>
 		</aui:fieldset>
 
 		<aui:button-row>

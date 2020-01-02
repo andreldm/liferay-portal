@@ -19,14 +19,23 @@
 <%
 AnalyticsConfiguration analyticsConfiguration = (AnalyticsConfiguration)request.getAttribute(AnalyticsSettingsWebKeys.ANALYTICS_CONFIGURATION);
 
+boolean connected = false;
 boolean syncAllContacts = analyticsConfiguration.syncAllContacts();
 Set<String> syncedOrganizationIds = SetUtil.fromArray(analyticsConfiguration.syncedOrganizationIds());
 Set<String> syncedUserGroupIds = SetUtil.fromArray(analyticsConfiguration.syncedUserGroupIds());
+
+if (!Validator.isBlank(analyticsConfiguration.token())) {
+	connected = true;
+}
 %>
+
+<liferay-util:html-top>
+	<link href="<%= PortalUtil.getStaticResourceURL(request, application.getContextPath() + "/css/main.css") %>" rel="stylesheet" type="text/css" />
+</liferay-util:html-top>
 
 <portlet:actionURL name="/analytics/edit_synced_contacts" var="editSyncedContactsURL" />
 
-<div class="sheet sheet-lg">
+<div class="portlet-analytics-settings sheet sheet-lg">
 	<h2 class="autofit-row">
 		<span class="autofit-col autofit-col-expand">
 			<liferay-ui:message key="contact-data" />
@@ -36,7 +45,7 @@ Set<String> syncedUserGroupIds = SetUtil.fromArray(analyticsConfiguration.synced
 	<aui:form action="<%= editSyncedContactsURL %>" method="post" name="fm">
 		<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 
-		<aui:fieldset>
+		<fieldset <%= connected ? "" : "disabled" %>>
 			<label class="control-label">
 				<liferay-ui:message key="sync-all-contacts" />
 			</label>
@@ -55,9 +64,9 @@ Set<String> syncedUserGroupIds = SetUtil.fromArray(analyticsConfiguration.synced
 					<liferay-ui:message arguments="<%= UserServiceUtil.getCompanyUsersCount(themeDisplay.getCompanyId()) %>" key="sync-all-x-contacts" />
 				</span>
 			</label>
-		</aui:fieldset>
+		</fieldset>
 
-		<aui:fieldset>
+		<fieldset <%= connected ? "" : "disabled" %>>
 			<label class="control-label">
 				<liferay-ui:message key="sync-by-user-groups-and-organizations" />
 			</label>
@@ -66,12 +75,20 @@ Set<String> syncedUserGroupIds = SetUtil.fromArray(analyticsConfiguration.synced
 				<liferay-ui:message key="sync-by-user-groups-and-organizations-help" />
 			</div>
 
-			<portlet:renderURL var="createUserGroupURL">
-				<portlet:param name="mvcRenderCommandName" value="/analytics_settings/edit_synced_contacts_groups" />
-				<portlet:param name="redirect" value="<%= currentURL %>" />
-			</portlet:renderURL>
+			<c:choose>
+				<c:when test="<%= connected %>">
+					<portlet:renderURL var="createUserGroupURL">
+						<portlet:param name="mvcRenderCommandName" value="/analytics_settings/edit_synced_contacts_groups" />
+						<portlet:param name="redirect" value="<%= currentURL %>" />
+					</portlet:renderURL>
 
-			<a class="d-flex m-4 p-2 text-decoration-none" href=<%= createUserGroupURL %> />
+					<a class="d-flex m-4 p-2 text-decoration-none" href=<%= createUserGroupURL %>>
+				</c:when>
+				<c:otherwise>
+					<span class="contacts-link-disabled d-flex m-4 p-2">
+				</c:otherwise>
+			</c:choose>
+
 				<div class="pr-3">
 					<div class="bg-light sticker sticker-light sticker-rounded">
 						<liferay-ui:icon
@@ -90,14 +107,30 @@ Set<String> syncedUserGroupIds = SetUtil.fromArray(analyticsConfiguration.synced
 						<liferay-ui:message arguments='<%= syncAllContacts ? "all" : syncedUserGroupIds.size() %>' key="x-user-groups-selected" />
 					</small>
 				</div>
-			</a>
 
-			<portlet:renderURL var="createOrganizationsURL">
-				<portlet:param name="mvcRenderCommandName" value="/analytics_settings/edit_synced_organizations" />
-				<portlet:param name="redirect" value="<%= currentURL %>" />
-			</portlet:renderURL>
+			<c:choose>
+				<c:when test="<%= connected %>">
+					</a>
+				</c:when>
+				<c:otherwise>
+					</span>
+				</c:otherwise>
+			</c:choose>
 
-			<a class="d-flex m-4 p-2 text-decoration-none" href=<%= createOrganizationsURL %> />
+			<c:choose>
+				<c:when test="<%= connected %>">
+					<portlet:renderURL var="createOrganizationsURL">
+						<portlet:param name="mvcRenderCommandName" value="/analytics_settings/edit_synced_organizations" />
+						<portlet:param name="redirect" value="<%= currentURL %>" />
+					</portlet:renderURL>
+
+					<a class="d-flex m-4 p-2 text-decoration-none" href=<%= createOrganizationsURL %>>
+				</c:when>
+				<c:otherwise>
+					<span class="contacts-link-disabled d-flex m-4 p-2">
+				</c:otherwise>
+			</c:choose>
+
 				<div class="pr-3">
 					<div class="bg-light sticker sticker-light sticker-rounded">
 						<liferay-ui:icon
@@ -116,11 +149,19 @@ Set<String> syncedUserGroupIds = SetUtil.fromArray(analyticsConfiguration.synced
 						<liferay-ui:message arguments='<%= syncAllContacts ? "all" : syncedOrganizationIds.size() %>' key="x-organizations-selected" />
 					</small>
 				</div>
-			</a>
-		</aui:fieldset>
+
+			<c:choose>
+				<c:when test="<%= connected %>">
+					</a>
+				</c:when>
+				<c:otherwise>
+					</span>
+				</c:otherwise>
+			</c:choose>
+		<fieldset>
 
 		<aui:button-row>
-			<aui:button type="submit" value="save" />
+			<aui:button disabled="<%= !connected %>" type="submit" value="save" />
 		</aui:button-row>
 	</aui:form>
 </div>

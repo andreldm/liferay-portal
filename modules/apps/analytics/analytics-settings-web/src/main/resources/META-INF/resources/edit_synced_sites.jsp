@@ -16,6 +16,17 @@
 
 <%@ include file="/init.jsp" %>
 
+<%
+AnalyticsConfiguration analyticsConfiguration = (AnalyticsConfiguration)request.getAttribute(AnalyticsSettingsWebKeys.ANALYTICS_CONFIGURATION);
+
+boolean connected = false;
+GroupDisplayContext groupDisplayContext = new GroupDisplayContext(renderRequest, renderResponse);
+
+if (!Validator.isBlank(analyticsConfiguration.token())) {
+	connected = true;
+}
+%>
+
 <portlet:actionURL name="/analytics/edit_synced_sites" var="editSyncedSitesURL" />
 
 <div class="sheet sheet-lg">
@@ -24,10 +35,6 @@
 			<liferay-ui:message key="choose-sites-to-sync" />
 		</span>
 	</h2>
-
-	<%
-	GroupDisplayContext groupDisplayContext = new GroupDisplayContext(renderRequest, renderResponse);
-	%>
 
 	<clay:management-toolbar
 		displayContext="<%= new GroupManagementToolbarDisplayContext(liferayPortletRequest, liferayPortletResponse, request, groupDisplayContext) %>"
@@ -67,7 +74,7 @@
 		</liferay-ui:search-container>
 
 		<aui:button-row>
-			<aui:button type="submit" value="save-and-sync" />
+			<aui:button disabled="<%= !connected %>" type="submit" value="save-and-sync" />
 		</aui:button-row>
 	</aui:form>
 </div>

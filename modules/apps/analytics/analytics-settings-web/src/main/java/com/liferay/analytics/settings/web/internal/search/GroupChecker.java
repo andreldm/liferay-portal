@@ -21,14 +21,19 @@ import java.util.Set;
 
 import javax.portlet.RenderResponse;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author André Miranda
  */
 public class GroupChecker extends EmptyOnClickRowChecker {
 
-	public GroupChecker(RenderResponse renderResponse, Set<String> ids) {
+	public GroupChecker(
+		RenderResponse renderResponse, boolean disableAll, Set<String> ids) {
+
 		super(renderResponse);
 
+		_disableAll = disableAll;
 		_ids = ids;
 	}
 
@@ -39,6 +44,22 @@ public class GroupChecker extends EmptyOnClickRowChecker {
 		return _ids.contains(String.valueOf(group.getGroupId()));
 	}
 
+	@Override
+	protected String getRowCheckBox(
+		HttpServletRequest httpServletRequest, boolean checked,
+		boolean disabled, String name, String value, String checkBoxRowIds,
+		String checkBoxAllRowIds, String checkBoxPostOnClick) {
+
+		if (_disableAll) {
+			disabled = true;
+		}
+
+		return super.getRowCheckBox(
+			httpServletRequest, checked, disabled, name, value, checkBoxRowIds,
+			checkBoxAllRowIds, checkBoxPostOnClick);
+	}
+
+	private final boolean _disableAll;
 	private final Set<String> _ids;
 
 }

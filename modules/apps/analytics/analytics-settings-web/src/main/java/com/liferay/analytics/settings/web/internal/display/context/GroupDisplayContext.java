@@ -80,6 +80,7 @@ public class GroupDisplayContext {
 		groupSearch.setRowChecker(
 			new GroupChecker(
 				_renderResponse,
+				Validator.isBlank(_analyticsConfiguration.token()),
 				SetUtil.fromArray(_analyticsConfiguration.syncedGroupIds())));
 
 		int total = GroupServiceUtil.searchCount(

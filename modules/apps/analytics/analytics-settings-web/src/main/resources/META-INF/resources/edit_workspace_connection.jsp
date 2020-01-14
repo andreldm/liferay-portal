@@ -33,7 +33,7 @@ if (analyticsConfiguration != null) {
 	}
 
 	if (analyticsConfiguration.syncAllContacts()) {
-		totalContactsSelected = UserServiceUtil.getCompanyUsersCount(themeDisplay.getCompanyId());
+		totalContactsSelected = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), StringPool.BLANK, WorkflowConstants.STATUS_APPROVED, new LinkedHashMap<String, Object>());
 	}
 	else {
 		String[] syncedOrganizationIds = analyticsConfiguration.syncedOrganizationIds();

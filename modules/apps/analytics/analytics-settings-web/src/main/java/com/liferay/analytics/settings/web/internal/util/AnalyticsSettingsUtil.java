@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.util.Validator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import java.util.Objects;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -84,10 +86,25 @@ public class AnalyticsSettingsUtil {
 			companyId, "liferayAnalyticsFaroBackendURL");
 	}
 
+	public static String getConnectionType(long companyId) {
+		return PrefsPropsUtil.getString(
+			companyId, "liferayAnalyticsConnectionType");
+	}
+
 	public static boolean isAnalyticsEnabled(long companyId) {
 		if (Validator.isNull(getAsahFaroBackendDataSourceId(companyId)) ||
 			Validator.isNull(getAsahFaroBackendSecuritySignature(companyId)) ||
 			Validator.isNull(getAsahFaroBackendURL(companyId))) {
+
+			return false;
+		}
+
+		return true;
+	}
+
+	public static boolean isAnalyticsEnabledWithOAuth(long companyId) {
+		if (!isAnalyticsEnabled(companyId) ||
+			Objects.equals("token", getConnectionType(companyId))) {
 
 			return false;
 		}

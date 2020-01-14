@@ -211,6 +211,9 @@ public class EditWorkspaceConnectionMVCActionCommand
 			unicodeProperties.setProperty(key, jsonObject.getString(key));
 		}
 
+		unicodeProperties.setProperty(
+			"liferayAnalyticsConnectionType", "token");
+
 		companyService.updatePreferences(
 			themeDisplay.getCompanyId(), unicodeProperties);
 	}

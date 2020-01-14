@@ -108,6 +108,7 @@ public class AnalyticsMessageSenderClientImpl
 
 		UnicodeProperties unicodeProperties = new UnicodeProperties(true);
 
+		unicodeProperties.setProperty("liferayAnalyticsConnectionType", "");
 		unicodeProperties.setProperty("liferayAnalyticsDataSourceId", "");
 		unicodeProperties.setProperty("liferayAnalyticsEndpointURL", "");
 		unicodeProperties.setProperty(

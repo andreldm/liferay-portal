@@ -164,6 +164,7 @@ public abstract class BaseAnalyticsMVCActionCommand
 		companyService.removePreferences(
 			companyId,
 			new String[] {
+				"liferayAnalyticsConnectionType",
 				"liferayAnalyticsDataSourceId", "liferayAnalyticsEndpointURL",
 				"liferayAnalyticsFaroBackendSecuritySignature",
 				"liferayAnalyticsFaroBackendURL", "liferayAnalyticsGroupIds",

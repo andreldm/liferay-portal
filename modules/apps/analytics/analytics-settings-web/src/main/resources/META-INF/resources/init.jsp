@@ -34,6 +34,7 @@ page import="com.liferay.analytics.settings.web.internal.display.context.Organiz
 page import="com.liferay.analytics.settings.web.internal.display.context.OrganizationManagementToolbarDisplayContext" %><%@
 page import="com.liferay.analytics.settings.web.internal.display.context.UserGroupDisplayContext" %><%@
 page import="com.liferay.analytics.settings.web.internal.display.context.UserGroupManagementToolbarDisplayContext" %><%@
+page import="com.liferay.analytics.settings.web.internal.util.AnalyticsSettingsUtil" %><%@
 page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.service.UserLocalServiceUtil" %><%@

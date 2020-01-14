@@ -14,6 +14,7 @@
 
 package com.liferay.analytics.settings.web.internal.util;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -38,24 +39,34 @@ public class AnalyticsSettingsUtil {
 
 	public static HttpResponse doPost(
 			JSONObject bodyJSONObject, long companyId, String path)
-		throws IOException {
+		throws PortalException {
 
-		return _request(
-			bodyJSONObject, companyId,
-			new HttpPost(
-				String.format(
-					"%s/%s", getAsahFaroBackendURL(companyId), path)));
+		try {
+			return _request(
+				bodyJSONObject, companyId,
+				new HttpPost(
+					String.format(
+						"%s/%s", getAsahFaroBackendURL(companyId), path)));
+		}
+		catch (IOException ioe) {
+			throw new PortalException(ioe);
+		}
 	}
 
 	public static HttpResponse doPut(
 			JSONObject bodyJSONObject, long companyId, String path)
-		throws IOException {
+		throws PortalException {
 
-		return _request(
-			bodyJSONObject, companyId,
-			new HttpPut(
-				String.format(
-					"%s/%s", getAsahFaroBackendURL(companyId), path)));
+		try {
+			return _request(
+				bodyJSONObject, companyId,
+				new HttpPut(
+					String.format(
+						"%s/%s", getAsahFaroBackendURL(companyId), path)));
+		}
+		catch (IOException ioe) {
+			throw new PortalException(ioe);
+		}
 	}
 
 	public static String getAsahFaroBackendDataSourceId(long companyId) {

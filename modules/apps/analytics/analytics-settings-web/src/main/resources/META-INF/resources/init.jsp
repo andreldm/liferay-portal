@@ -28,12 +28,15 @@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <%@ page import="com.liferay.analytics.settings.configuration.AnalyticsConfiguration" %><%@
 page import="com.liferay.analytics.settings.web.internal.constants.AnalyticsSettingsWebKeys" %><%@
+page import="com.liferay.analytics.settings.web.internal.display.context.ChannelDisplayContext" %><%@
+page import="com.liferay.analytics.settings.web.internal.display.context.ChannelManagementToolbarDisplayContext" %><%@
 page import="com.liferay.analytics.settings.web.internal.display.context.GroupDisplayContext" %><%@
 page import="com.liferay.analytics.settings.web.internal.display.context.GroupManagementToolbarDisplayContext" %><%@
 page import="com.liferay.analytics.settings.web.internal.display.context.OrganizationDisplayContext" %><%@
 page import="com.liferay.analytics.settings.web.internal.display.context.OrganizationManagementToolbarDisplayContext" %><%@
 page import="com.liferay.analytics.settings.web.internal.display.context.UserGroupDisplayContext" %><%@
 page import="com.liferay.analytics.settings.web.internal.display.context.UserGroupManagementToolbarDisplayContext" %><%@
+page import="com.liferay.analytics.settings.web.internal.search.ChannelSearch" %><%@
 page import="com.liferay.analytics.settings.web.internal.user.AnalyticsUsersManager" %><%@
 page import="com.liferay.analytics.settings.web.internal.util.AnalyticsSettingsUtil" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
@@ -53,3 +56,7 @@ page import="com.liferay.portal.kernel.util.Validator" %>
 <liferay-theme:defineObjects />
 
 <portlet:defineObjects />
+
+<liferay-util:html-top>
+	<link href="<%= PortalUtil.getStaticResourceURL(request, application.getContextPath() + "/css/main.css") %>" rel="stylesheet" type="text/css" />
+</liferay-util:html-top>

@@ -19,6 +19,7 @@
 <%
 String analyticsClientConfig = (String)request.getAttribute(AnalyticsWebKeys.ANALYTICS_CLIENT_CONFIG);
 Group liveGroup = StagingUtil.getLiveGroup(themeDisplay.getScopeGroup());
+
 String channelId = liveGroup.getTypeSettingsProperty("channelId");
 %>
 

@@ -45,7 +45,7 @@ String channelId = liveGroup.getTypeSettingsProperty("channelId");
 
 		Analytics.registerMiddleware(function(request) {
 			request.context.canonicalUrl = themeDisplay.getCanonicalURL();
-			request.context.channelId = '<%= channelId %>';
+			request.context.channelId = <%= StringUtil.quote(channelId) %>;
 			request.context.groupId = themeDisplay.getScopeGroupIdOrLiveGroupId();
 
 			return request;
@@ -71,7 +71,7 @@ String channelId = liveGroup.getTypeSettingsProperty("channelId");
 
 					Analytics.registerMiddleware(function(request) {
 						request.context.canonicalUrl = themeDisplay.getCanonicalURL();
-						request.context.channelId = '<%= channelId %>';
+						request.context.channelId = <%= StringUtil.quote(channelId) %>;
 						request.context.groupId = themeDisplay.getScopeGroupIdOrLiveGroupId();
 
 						return request;

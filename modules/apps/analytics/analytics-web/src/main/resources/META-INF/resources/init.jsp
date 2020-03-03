@@ -25,7 +25,8 @@ page import="com.liferay.exportimport.kernel.staging.StagingUtil" %><%@
 page import="com.liferay.portal.kernel.model.Group" %><%@
 page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.PropsKeys" %><%@
-page import="com.liferay.portal.kernel.util.PropsUtil" %>
+page import="com.liferay.portal.kernel.util.PropsUtil" %><%@
+page import="com.liferay.portal.kernel.util.StringUtil" %>
 
 <liferay-frontend:defineObjects />
 

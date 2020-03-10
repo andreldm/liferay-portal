@@ -17,7 +17,7 @@ import hash from './utils/hash';
 
 /**
  * Client used to abstract communication with the Analytics Endpoint. It exposes
- * the send and use methods as only valid entry points for sending and modifiying
+ * the send and use methods as only valid entry points for sending and modifying
  * requests.
  * @class
  */
@@ -48,7 +48,7 @@ class Client {
 
 	/**
 	 * Returns a Request object with all data from the analytics instance
-	 * includin the batched event objects
+	 * including the batched event objects
 	 * @param {object} analytics The Analytics instance from which the data is extracted
 	 * @param {string} userId The userId string representation
 	 * @protected

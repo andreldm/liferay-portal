@@ -520,7 +520,7 @@ class Analytics {
 	 * @return {Promise} A promise returned by the fetch request.
 	 */
 	_sendIdentity(identity, userId) {
-		const {dataSourceId} = this.config;
+		const {channelId, dataSourceId} = this.config;
 
 		const newIdentityHash = this._getIdentityHash(
 			dataSourceId,
@@ -535,6 +535,7 @@ class Analytics {
 			instance._persist(STORAGE_KEY_IDENTITY_HASH, newIdentityHash);
 
 			const body = JSON.stringify({
+				channelId,
 				dataSourceId,
 				identity,
 				userId,

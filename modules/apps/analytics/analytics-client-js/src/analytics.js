@@ -529,7 +529,7 @@ class Analytics {
 		);
 		const storedIdentityHash = getItem(STORAGE_KEY_IDENTITY_HASH);
 
-		let identyHash = Promise.resolve(storedIdentityHash);
+		let identityHash = Promise.resolve(storedIdentityHash);
 
 		if (newIdentityHash !== storedIdentityHash) {
 			instance._persist(STORAGE_KEY_IDENTITY_HASH, newIdentityHash);
@@ -553,12 +553,12 @@ class Analytics {
 				mode: 'cors',
 			};
 
-			identyHash = fetch(this.identityEndpoint, request).then(
+			identityHash = fetch(this.identityEndpoint, request).then(
 				() => newIdentityHash
 			);
 		}
 
-		return identyHash;
+		return identityHash;
 	}
 
 	/**

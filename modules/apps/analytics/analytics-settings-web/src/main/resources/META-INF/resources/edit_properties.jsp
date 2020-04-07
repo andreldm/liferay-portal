@@ -47,7 +47,7 @@ String keywords = ParamUtil.getString(request, "keywords");
 		</c:when>
 		<c:when test="<%= channelSearch == null %>">
 			<div class="mt-4">
-				<liferay-ui:message key="we-were-unable-to-retrieve-the-properties-from-analytics-cloud-retry" />
+				<liferay-ui:message key="unable-to-retrieve-the-properties-from-analytics-cloud" />
 
 				<div class="mt-4">
 					<liferay-portlet:renderURL varImpl="selectSitesURL">

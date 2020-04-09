@@ -106,11 +106,14 @@ public class AddChannelMVCActionCommand extends BaseAnalyticsMVCActionCommand {
 		Group group, ThemeDisplay themeDisplay) {
 
 		JSONObject groupJSONObject = JSONUtil.put(
-			"id", String.valueOf(group.getGroupId()));
+			"groupId", String.valueOf(group.getGroupId()));
 
 		try {
 			return groupJSONObject.put(
-				"name", group.getDescriptiveName(themeDisplay.getLocale()));
+				"friendlyURL", group.getFriendlyURL()
+			).put(
+				"name", group.getDescriptiveName(themeDisplay.getLocale())
+			);
 		}
 		catch (PortalException portalException) {
 			_log.error(portalException, portalException);
@@ -276,14 +279,18 @@ public class AddChannelMVCActionCommand extends BaseAnalyticsMVCActionCommand {
 
 			dataSourcesStream.flatMap(
 				dataSourceJSONObject -> {
-					JSONArray groupIdsJSONArray =
-						dataSourceJSONObject.getJSONArray("groupIds");
+					JSONArray groupsJSONArray =
+						dataSourceJSONObject.getJSONArray("groups");
 
 					return StreamSupport.stream(
-						groupIdsJSONArray.spliterator(), false);
+						groupsJSONArray.spliterator(), false);
 				}
 			).map(
-				String::valueOf
+				object -> {
+					JSONObject groupJSONOBject = (JSONObject)object;
+
+					return groupJSONOBject.getString("groupId");
+				}
 			).forEach(
 				groupId -> {
 					Group group = groupLocalService.fetchGroup(

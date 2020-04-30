@@ -205,13 +205,15 @@ class Analytics {
 		}
 
 		const currentContextHash = this._getCurrentContextHash();
+		const { channelId } = instance.config;
 
 		instance._eventQueue.addItem(
 			normalizeEvent(
 				eventId,
 				applicationId,
 				eventProps,
-				currentContextHash
+				currentContextHash,
+				channelId
 			)
 		);
 	}

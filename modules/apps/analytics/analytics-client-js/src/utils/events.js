@@ -82,7 +82,8 @@ export const normalizeEvent = (
 	eventId,
 	applicationId,
 	properties,
-	contextHash
+	contextHash,
+	channelId
 ) => {
 	const date = new Date();
 	const eventDate = date.toISOString();
@@ -90,6 +91,7 @@ export const normalizeEvent = (
 
 	return {
 		applicationId,
+		channelId,
 		contextHash,
 		eventDate,
 		eventId,

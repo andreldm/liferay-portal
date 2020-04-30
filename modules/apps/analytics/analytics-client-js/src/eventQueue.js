@@ -102,8 +102,12 @@ class EventQueue {
 	_createMessage({context, events, userId}) {
 		const {channelId, dataSourceId} = this.analyticsInstance.config;
 
+		const eventChannelId = events.map(e => e.channelId).reduce((a, b) => a);
+
+		events.forEach(e => delete e['channelId']);
+
 		return {
-			channelId,
+			channelId: eventChannelId || channelId,
 			context,
 			dataSourceId,
 			events,

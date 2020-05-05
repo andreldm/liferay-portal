@@ -101,11 +101,14 @@ public class EditChannelMVCActionCommand extends BaseAnalyticsMVCActionCommand {
 		Group group, ThemeDisplay themeDisplay) {
 
 		JSONObject groupJSONObject = JSONUtil.put(
-			"id", String.valueOf(group.getGroupId()));
+			"groupId", String.valueOf(group.getGroupId()));
 
 		try {
 			return groupJSONObject.put(
-				"name", group.getDescriptiveName(themeDisplay.getLocale()));
+				"friendlyURL", group.getFriendlyURL()
+			).put(
+				"name", group.getDescriptiveName(themeDisplay.getLocale())
+			);
 		}
 		catch (PortalException portalException) {
 			_log.error(portalException, portalException);

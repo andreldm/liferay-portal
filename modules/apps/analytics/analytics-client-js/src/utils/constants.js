@@ -47,3 +47,19 @@ export const MARK_NAVIGATION_START = 'navigationStartSPA';
 export const MARK_PAGE_LOAD_TIME = 'pageLoadTimeSPA';
 
 export const MARK_VIEW_DURATION = 'viewDurationSPA';
+
+// Language Constants
+
+export const LANGUAGE_JAPANESE = 'ja';
+
+export const LANGUAGE_KOREAN = 'ko';
+
+export const LANGUAGE_CHINESE = 'zh';
+
+// Read metrics Constants
+
+export const CHARS_PER_MIN = 500;
+
+export const WORDS_PER_MIN = 265;
+
+export const PERCENTAGE_EXPECTED_TO_READ_TIME = 0.75;

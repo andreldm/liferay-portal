@@ -12,40 +12,17 @@
  * details.
  */
 
-const webpack = require('webpack');
-const buildFolder = `${__dirname}/build`;
-const buildName = 'analytics-all-min.js';
+const config = require('./webpack.config');
 
 module.exports = {
-	entry: [
-		'core-js/fn/array/from',
-		'core-js/fn/array/find',
-		'core-js/es6/symbol',
-		'core-js/fn/promise',
-		'whatwg-fetch',
-		'./src/analytics.js',
-	],
-	mode: 'production',
-	module: {
-		rules: [
-			{
-				exclude: /(node_modules)/,
-				test: /\.js$/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-						compact: false,
-					},
-				},
-			},
-		],
+	...config,
+	devServer: {
+		contentBase: config.output.path,
+		port: 8081,
 	},
+	devtool: 'inline-source-map',
+	mode: 'development',
 	optimization: {
-		minimize: true,
+		minimize: false,
 	},
-	output: {
-		filename: buildName,
-		path: buildFolder,
-	},
-	plugins: [new webpack.optimize.ModuleConcatenationPlugin()],
 };

@@ -51,7 +51,7 @@ function unload(analytics) {
 		.pop();
 
 	const props = {
-		viewDuration: duration,
+		viewDuration: ~~duration,
 	};
 
 	analytics.send('pageUnloaded', applicationId, props);

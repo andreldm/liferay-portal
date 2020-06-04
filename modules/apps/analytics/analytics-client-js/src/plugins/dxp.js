@@ -39,7 +39,7 @@ function dxp(analytics) {
 			.pop();
 
 		const props = {
-			viewDuration: duration,
+			viewDuration: ~~duration,
 		};
 
 		analytics.send('pageUnloaded', pageApplicationId, props);
@@ -65,7 +65,7 @@ function dxp(analytics) {
 			.pop();
 
 		const props = {
-			pageLoadTime: duration,
+			pageLoadTime: ~~duration,
 		};
 
 		analytics.send('pageLoaded', pageApplicationId, props);

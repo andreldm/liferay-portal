@@ -12,6 +12,10 @@
  * details.
  */
 
+/**
+ * Returns if there is vertical scroll bar on the client.
+ * @returns {boolean} True if there is vertical scroll bar
+ */
 function hasVerticalScrollBar() {
 	return (
 		document.documentElement.scrollHeight >
@@ -34,6 +38,12 @@ class ReadTracker {
 		}
 	}
 
+	/**
+	 * Set the expected time to be considered read
+	 *
+	 * @param {Function} fn The callback function that will process if the depth and time are reached.
+	 * @param {number} expectedViewDuration The expected view duration to be considered read
+	 */
 	setExpectedViewDuration(fn, expectedViewDuration) {
 		if (expectedViewDuration && !this.timeoutId) {
 			this.timeoutId = setTimeout(
@@ -43,16 +53,29 @@ class ReadTracker {
 		}
 	}
 
+	/**
+	 * Set depth reached
+	 * @param {Function} fn The callback function that will process if the depth and time are reached.
+	 */
 	onDepthReached(fn) {
 		this.depthReached = true;
 		this.checkIsRead(fn);
 	}
 
+	/**
+	 * Set time reached
+	 * @param {Function} fn The callback function that will process if the depth and time are reached.
+	 */
 	onTimeReached(fn) {
 		this.timeReached = true;
 		this.checkIsRead(fn);
 	}
 
+	/**
+	 * Check if the client reached both conditions to be considered read
+	 * If the client reaches both it sends an analytics event
+	 * @param {Function} fn The callback function that will process if the depth and time are reached.
+	 */
 	checkIsRead(fn) {
 		if (this.timeReached && this.depthReached) {
 			fn();

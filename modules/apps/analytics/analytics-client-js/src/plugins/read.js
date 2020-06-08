@@ -30,21 +30,39 @@ const applicationId = 'Page';
 
 const MIN_TO_MS = 60000;
 
+/**
+ * Get all the blogs and webContents on the page
+ * @returns {NodeList} A list with all the elements found
+ */
 function getAssetsElements() {
 	return document.querySelectorAll(
 		'[data-analytics-asset-type="web-content"], [data-analytics-asset-type="blog"]'
 	);
 }
 
+/**
+ * Wether a Document is trackable or not.
+ * @param {Object} element The Document DOM element
+ * @returns {boolean} True if the element is trackable.
+ */
 function isTrackable(element) {
 	return element && 'analyticsAssetId' in element.dataset;
 }
 
+/**
+ * Get the lang property on documentElement.
+ * @returns {string} DocumentElement language.
+ */
 function getLang() {
 	return document.documentElement.lang;
 }
 
-function viewDurationByCharacters(content) {
+/**
+ * Calculates the viewDuration based on total characters.
+ * @param {string} content Text to be used on the calculation.
+ * @returns {number} Expected View Duration.
+ */
+export function viewDurationByCharacters(content) {
 	return (
 		(content.replace(/\s+/gm, '').length / CHARS_PER_MIN) *
 		MIN_TO_MS *
@@ -52,7 +70,12 @@ function viewDurationByCharacters(content) {
 	);
 }
 
-function viewDurationByWords(content) {
+/**
+ * Calculates the viewDuration based on total words.
+ * @param {string} content Text to be used on the calculation.
+ * @returns {number} Expected View Duration.
+ */
+export function viewDurationByWords(content) {
 	return (
 		(getNumberOfWords({innerText: content}) / WORDS_PER_MIN) *
 		MIN_TO_MS *
@@ -60,7 +83,12 @@ function viewDurationByWords(content) {
 	);
 }
 
-function getExpectedViewDuration(content) {
+/**
+ * Calculates the viewDuration based on the documentElement language.
+ * @param {string} content Text to be used on the calculation.
+ * @returns {number} Expected View Duration.
+ */
+export function getExpectedViewDuration(content) {
 	const language = getLang();
 
 	if (LOGOGRAPHIC_LANGUAGES.has(language)) {
@@ -70,6 +98,10 @@ function getExpectedViewDuration(content) {
 	return viewDurationByWords(content);
 }
 
+/**
+ * Sends information when user read a page.
+ * @param {Object} The Analytics client instance.
+ */
 function read(analytics) {
 	const readTracker = new ReadTracker();
 	let scrollTracker = new ScrollTracker();

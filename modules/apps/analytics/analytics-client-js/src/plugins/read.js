@@ -12,17 +12,16 @@
  * details.
  */
 
+import {getNumberOfWords} from '../utils/assets';
 import {
 	CHARS_PER_MIN,
 	DEBOUNCE,
-	LANGUAGE_CHINESE,
-	LANGUAGE_JAPANESE,
-	LANGUAGE_KOREAN,
-	PERCENTAGE_EXPECTED_TO_READ_TIME,
+	LOGOGRAPHIC_LANGUAGES,
+	MIMIMUN_SCROLL_DEPTH,
+	READ_TIME_FACTOR,
 	WORDS_PER_MIN,
 } from '../utils/constants';
 import {debounce} from '../utils/debounce';
-import {getNumberOfWords} from '../utils/assets';
 import {onReady} from '../utils/events';
 import {ReadTracker} from '../utils/read';
 import {ScrollTracker} from '../utils/scroll';
@@ -47,9 +46,9 @@ function getLang() {
 
 function viewDurationByCharacters(content) {
 	return (
-		(content.replace(/\s+/gm, '') / CHARS_PER_MIN) *
+		(content.replace(/\s+/gm, '').length / CHARS_PER_MIN) *
 		MIN_TO_MS *
-		PERCENTAGE_EXPECTED_TO_READ_TIME
+		READ_TIME_FACTOR
 	);
 }
 
@@ -57,18 +56,14 @@ function viewDurationByWords(content) {
 	return (
 		(getNumberOfWords({innerText: content}) / WORDS_PER_MIN) *
 		MIN_TO_MS *
-		PERCENTAGE_EXPECTED_TO_READ_TIME
+		READ_TIME_FACTOR
 	);
 }
 
 function getExpectedViewDuration(content) {
 	const language = getLang();
 
-	if (
-		[LANGUAGE_CHINESE, LANGUAGE_JAPANESE, LANGUAGE_KOREAN].indexOf(
-			language
-		) !== -1
-	) {
+	if (LOGOGRAPHIC_LANGUAGES.has(language)) {
 		return viewDurationByCharacters(content);
 	}
 
@@ -99,7 +94,7 @@ function read(analytics) {
 
 	const onScroll = debounce(() => {
 		scrollTracker.onDepthReached((depth) => {
-			if (depth >= 75) {
+			if (depth >= MIMIMUN_SCROLL_DEPTH) {
 				readTracker.onDepthReached(() => {
 					analytics.send('pageRead', applicationId);
 				});

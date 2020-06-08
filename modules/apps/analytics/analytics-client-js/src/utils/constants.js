@@ -48,18 +48,14 @@ export const MARK_PAGE_LOAD_TIME = 'pageLoadTimeSPA';
 
 export const MARK_VIEW_DURATION = 'viewDurationSPA';
 
-// Language Constants
-
-export const LANGUAGE_JAPANESE = 'ja';
-
-export const LANGUAGE_KOREAN = 'ko';
-
-export const LANGUAGE_CHINESE = 'zh';
-
 // Read metrics Constants
+
+export const LOGOGRAPHIC_LANGUAGES = new Set(['ja', 'ko', 'zh']);
 
 export const CHARS_PER_MIN = 500;
 
+export const MIMIMUN_SCROLL_DEPTH = 75;
+
 export const WORDS_PER_MIN = 265;
 
-export const PERCENTAGE_EXPECTED_TO_READ_TIME = 0.75;
+export const READ_TIME_FACTOR = 0.75;

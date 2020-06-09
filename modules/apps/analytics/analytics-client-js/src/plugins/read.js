@@ -14,12 +14,12 @@
 
 import {getNumberOfWords} from '../utils/assets';
 import {
-	CHARS_PER_MIN,
 	DEBOUNCE,
-	LOGOGRAPHIC_LANGUAGES,
-	MIMIMUN_SCROLL_DEPTH,
+	READ_CHARS_PER_MIN,
+	READ_LOGOGRAPHIC_LANGUAGES,
+	READ_MIMIMUN_SCROLL_DEPTH,
 	READ_TIME_FACTOR,
-	WORDS_PER_MIN,
+	READ_WORDS_PER_MIN,
 } from '../utils/constants';
 import {debounce} from '../utils/debounce';
 import {onReady} from '../utils/events';
@@ -64,7 +64,7 @@ function getLang() {
  */
 export function viewDurationByCharacters(content) {
 	return (
-		(content.replace(/\s+/gm, '').length / CHARS_PER_MIN) *
+		(content.replace(/\s+/gm, '').length / READ_CHARS_PER_MIN) *
 		MIN_TO_MS *
 		READ_TIME_FACTOR
 	);
@@ -77,7 +77,7 @@ export function viewDurationByCharacters(content) {
  */
 export function viewDurationByWords(content) {
 	return (
-		(getNumberOfWords({innerText: content}) / WORDS_PER_MIN) *
+		(getNumberOfWords({innerText: content}) / READ_WORDS_PER_MIN) *
 		MIN_TO_MS *
 		READ_TIME_FACTOR
 	);
@@ -91,7 +91,7 @@ export function viewDurationByWords(content) {
 export function getExpectedViewDuration(content) {
 	const language = getLang();
 
-	if (LOGOGRAPHIC_LANGUAGES.has(language)) {
+	if (READ_LOGOGRAPHIC_LANGUAGES.has(language)) {
 		return viewDurationByCharacters(content);
 	}
 
@@ -126,7 +126,7 @@ function read(analytics) {
 
 	const onScroll = debounce(() => {
 		scrollTracker.onDepthReached((depth) => {
-			if (depth >= MIMIMUN_SCROLL_DEPTH) {
+			if (depth >= READ_MIMIMUN_SCROLL_DEPTH) {
 				readTracker.onDepthReached(() => {
 					analytics.send('pageRead', applicationId);
 				});

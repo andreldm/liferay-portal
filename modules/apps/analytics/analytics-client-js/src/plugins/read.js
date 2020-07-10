@@ -35,12 +35,13 @@ const MIN_TO_MS = 60000;
  * @returns {string} Readable content of the page
  */
 function getReadableContent() {
+	const mainContent = document.getElementById('main-content');
 	const meta = document.querySelector(
 		"meta[name='data-analytics-readable-content']"
 	);
 
-	if (meta && meta.getAttribute('content') == 'true') {
-		return document.getElementById('main-content').innerText;
+	if (meta && meta.getAttribute('content') == 'true' && mainContent) {
+		return mainContent.innerText;
 	}
 
 	return '';

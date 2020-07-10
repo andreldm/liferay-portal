@@ -29,17 +29,22 @@ const LOGOGRAPHIC_TEXT =
 const PAGE_HEIGHT = 1000;
 const SCROLL_HEIGHT = 2000;
 
-const createBlogElement = (isPhonological = true) => {
-	const blogElement = document.createElement('div');
+const createMainContent = (isPhonological = true) => {
+	const mainContent = document.createElement('div');
+	mainContent.id = 'main-content';
+	mainContent.innerText = isPhonological ? ENGLISH_TEXT : LOGOGRAPHIC_TEXT;
+	document.body.appendChild(mainContent);
 
-	blogElement.dataset.analyticsAssetId = 'assetId';
-	blogElement.dataset.analyticsAssetTitle = 'Blog Title 1';
-	blogElement.dataset.analyticsAssetType = 'blog';
-	blogElement.innerText = isPhonological ? ENGLISH_TEXT : LOGOGRAPHIC_TEXT;
+	return mainContent;
+};
 
-	document.body.appendChild(blogElement);
+const createMetaTag = () => {
+	const meta = document.createElement('meta');
+	meta.name = 'data-analytics-readable-content';
+	meta.content = 'true';
+	document.getElementsByTagName('head')[0].appendChild(meta);
 
-	return blogElement;
+	return meta;
 };
 
 describe('Read Plugin', () => {
@@ -47,6 +52,8 @@ describe('Read Plugin', () => {
 
 	beforeAll(() => {
 		jest.useFakeTimers();
+
+		createMetaTag();
 	});
 
 	beforeEach(() => {
@@ -90,7 +97,7 @@ describe('Read Plugin', () => {
 
 	describe('readPage event', () => {
 		it('is fired when reaches scroll and time', () => {
-			const blogElement = createBlogElement();
+			const blogElement = createMainContent();
 			const expectedReadDuration = Math.trunc(
 				getExpectedViewDuration(blogElement.innerText)
 			);
@@ -113,7 +120,7 @@ describe('Read Plugin', () => {
 		});
 
 		it('is not fired when reaches scroll only', () => {
-			const blogElement = createBlogElement();
+			const blogElement = createMainContent();
 			const expectedReadDuration = Math.trunc(
 				getExpectedViewDuration(blogElement.innerText)
 			);
@@ -136,7 +143,7 @@ describe('Read Plugin', () => {
 		});
 
 		it('is not fired when reaches time only', () => {
-			const blogElement = createBlogElement();
+			const blogElement = createMainContent();
 			const expectedReadDuration = Math.trunc(
 				getExpectedViewDuration(blogElement.innerText)
 			);
@@ -171,7 +178,7 @@ describe('Read Plugin', () => {
 			Analytics.dispose();
 			Analytics = AnalyticsClient.create();
 
-			const blogElement = createBlogElement();
+			const blogElement = createMainContent();
 			const expectedReadDuration = Math.trunc(
 				getExpectedViewDuration(blogElement.innerText)
 			);
@@ -195,7 +202,7 @@ describe('Read Plugin', () => {
 				value: 'zh',
 			});
 
-			const blogElement = createBlogElement(false);
+			const blogElement = createMainContent(false);
 			const expectedReadDuration = Math.trunc(
 				getExpectedViewDuration(blogElement.innerText)
 			);

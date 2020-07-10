@@ -31,22 +31,19 @@ const applicationId = 'Page';
 const MIN_TO_MS = 60000;
 
 /**
- * Get all the blogs and webContents on the page
- * @returns {NodeList} A list with all the elements found
+ * Get all readable content on the page
+ * @returns {string} Readable content of the page
  */
-function getAssetsElements() {
-	return document.querySelectorAll(
-		'[data-analytics-asset-type="web-content"], [data-analytics-asset-type="blog"]'
+function getReadableContent() {
+	const meta = document.querySelector(
+		"meta[name='data-analytics-readable-content']"
 	);
-}
 
-/**
- * Wether a Document is trackable or not.
- * @param {Object} element The Document DOM element
- * @returns {boolean} True if the element is trackable.
- */
-function isTrackable(element) {
-	return element && 'analyticsAssetId' in element.dataset;
+	if (meta && meta.getAttribute('content') == 'true') {
+		return document.getElementById('main-content').innerText;
+	}
+
+	return '';
 }
 
 /**
@@ -106,17 +103,8 @@ function read(analytics) {
 	const readTracker = new ReadTracker();
 	let scrollTracker = new ScrollTracker();
 
-	let content = '';
-
 	const stopTrackingOnReady = onReady(() => {
-		const assetsElements = getAssetsElements();
-
-		Array.prototype.slice
-			.call(assetsElements)
-			.filter((element) => isTrackable(element))
-			.forEach(({innerText}) => {
-				content = content.concat(innerText);
-			});
+		const content = getReadableContent();
 
 		readTracker.setExpectedViewDuration(
 			() => analytics.send('pageRead', applicationId),

@@ -54,7 +54,7 @@ export const READ_CHARS_PER_MIN = 500;
 
 export const READ_LOGOGRAPHIC_LANGUAGES = new Set(['ja', 'ko', 'zh']);
 
-export const READ_MIMIMUN_SCROLL_DEPTH = 75;
+export const READ_MINIMUM_SCROLL_DEPTH = 75;
 
 export const READ_TIME_FACTOR = 0.75;
 

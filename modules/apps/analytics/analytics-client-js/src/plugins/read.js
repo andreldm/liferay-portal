@@ -17,7 +17,7 @@ import {
 	DEBOUNCE,
 	READ_CHARS_PER_MIN,
 	READ_LOGOGRAPHIC_LANGUAGES,
-	READ_MIMIMUN_SCROLL_DEPTH,
+	READ_MINIMUM_SCROLL_DEPTH,
 	READ_TIME_FACTOR,
 	READ_WORDS_PER_MIN,
 } from '../utils/constants';
@@ -114,7 +114,7 @@ function read(analytics) {
 
 	const onScroll = debounce(() => {
 		scrollTracker.onDepthReached((depth) => {
-			if (depth >= READ_MIMIMUN_SCROLL_DEPTH) {
+			if (depth >= READ_MINIMUM_SCROLL_DEPTH) {
 				readTracker.onDepthReached(() => {
 					analytics.send('pageRead', applicationId);
 				});

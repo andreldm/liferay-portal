@@ -12,15 +12,16 @@
  * details.
  */
 
+import {READ_MINIMUM_SCROLL_DEPTH} from '../utils/constants';
+
 /**
  * Returns if there is vertical scroll bar on the client.
  * @returns {boolean} True if there is vertical scroll bar
  */
 function hasVerticalScrollBar() {
-	return (
-		document.documentElement.scrollHeight >
-		document.documentElement.clientHeight
-	);
+	const {clientHeight, scrollHeight} = document.documentElement;
+
+	return (clientHeight * 100) / scrollHeight <= READ_MINIMUM_SCROLL_DEPTH;
 }
 
 class ReadTracker {

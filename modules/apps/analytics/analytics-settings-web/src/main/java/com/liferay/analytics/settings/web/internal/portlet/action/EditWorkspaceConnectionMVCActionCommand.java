@@ -233,7 +233,11 @@ public class EditWorkspaceConnectionMVCActionCommand
 		unicodeProperties.setProperty(
 			"liferayAnalyticsConnectionType", "token");
 
-		unicodeProperties.setProperty("liferayAnalyticsGroupIds", "");
+		if (AnalyticsSettingsUtil.isAnalyticsEnabledWithOAuth(
+				themeDisplay.getCompanyId())) {
+
+			unicodeProperties.setProperty("liferayAnalyticsGroupIds", "");
+		}
 
 		companyService.updatePreferences(
 			themeDisplay.getCompanyId(), unicodeProperties);

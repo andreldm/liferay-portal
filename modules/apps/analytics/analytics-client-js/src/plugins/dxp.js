@@ -21,6 +21,14 @@ import {
 
 const pageApplicationId = 'Page';
 
+function getDuration(measureName, startMark, endMark = undefined) {
+	window.performance.measure(measureName, startMark, endMark);
+
+	const {duration} = window.performance.getEntriesByName(measureName).pop();
+
+	return ~~duration;
+}
+
 /**
  * Plugin function that registers listeners related to DXP
  * @param {Object} analytics The Analytics client
@@ -31,54 +39,54 @@ function dxp(analytics) {
 	/**
 	 * Sends view duration information on the window unload event
 	 */
-	function beforeNavigate() {
-		window.performance.measure(MARK_VIEW_DURATION, MARK_NAVIGATION_START);
-
-		const {duration} = window.performance
-			.getEntriesByName(MARK_VIEW_DURATION)
-			.pop();
+	function sendUnloadEvent() {
+		const duration = getDuration(MARK_VIEW_DURATION, MARK_NAVIGATION_START);
 
 		const props = {
-			viewDuration: ~~duration,
+			viewDuration: duration,
 		};
 
 		analytics.send('pageUnloaded', pageApplicationId, props);
 
-		window.performance.mark(MARK_NAVIGATION_START);
-		window.Liferay.detach('beforeNavigate', beforeNavigate);
+		window.performance.mark(MARK_LOAD_EVENT_START);
+		window.Liferay.detach('beforeNavigate', sendUnloadEvent);
 	}
 
 	/**
 	 * Sends page load information on the endNavigate event when SPA is enabled on DXP
 	 */
-	function endNavigate() {
-		window.performance.mark(MARK_LOAD_EVENT_START);
+	function sendLoadEvent() {
+		window.performance.mark(MARK_NAVIGATION_START);
 
-		window.performance.measure(
-			MARK_PAGE_LOAD_TIME,
-			MARK_NAVIGATION_START,
+		const loadingStartMark = window.performance.getEntriesByName(
 			MARK_LOAD_EVENT_START
 		);
 
-		const {duration} = window.performance
-			.getEntriesByName(MARK_PAGE_LOAD_TIME)
-			.pop();
+		if (!loadingStartMark.length) {
+			window.performance.mark(MARK_LOAD_EVENT_START);
+		}
+
+		const duration = getDuration(
+			MARK_PAGE_LOAD_TIME,
+			MARK_LOAD_EVENT_START,
+			MARK_NAVIGATION_START
+		);
 
 		const props = {
-			pageLoadTime: ~~duration,
+			pageLoadTime: duration,
 		};
 
 		analytics.send('pageLoaded', pageApplicationId, props);
-
-		window.Liferay.detach('endNavigate', endNavigate);
 	}
 
 	if (window.Liferay && window.Liferay.SPA) {
 		window.performance.mark(MARK_NAVIGATION_START);
-		window.performance.mark(MARK_LOAD_EVENT_START);
 
-		window.Liferay.on('beforeNavigate', beforeNavigate);
-		window.Liferay.on('endNavigate', endNavigate);
+		window.Liferay.on('beforeNavigate', sendUnloadEvent);
+
+		if (document.readyState === 'complete') {
+			sendLoadEvent();
+		}
 	}
 }
 

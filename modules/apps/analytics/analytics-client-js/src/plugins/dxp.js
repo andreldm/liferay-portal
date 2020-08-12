@@ -40,25 +40,12 @@ function dxp(analytics) {
 		};
 
 		analytics.send('pageUnloaded', pageApplicationId, props);
-
-		window.performance.mark(MARK_LOAD_EVENT_START);
-		window.Liferay.detach('beforeNavigate', sendUnloadEvent);
 	}
 
 	/**
 	 * Sends page load information on the endNavigate event when SPA is enabled on DXP
 	 */
 	function sendLoadEvent() {
-		window.performance.mark(MARK_NAVIGATION_START);
-
-		const loadingStartMark = window.performance.getEntriesByName(
-			MARK_LOAD_EVENT_START
-		);
-
-		if (!loadingStartMark.length) {
-			window.performance.mark(MARK_LOAD_EVENT_START);
-		}
-
 		const duration = getDuration(
 			MARK_PAGE_LOAD_TIME,
 			MARK_LOAD_EVENT_START,
@@ -73,13 +60,24 @@ function dxp(analytics) {
 	}
 
 	if (window.Liferay && window.Liferay.SPA) {
-		window.performance.mark(MARK_NAVIGATION_START);
+		const loadingStartMarks = window.performance.getEntriesByName(
+			MARK_LOAD_EVENT_START
+		);
 
-		window.Liferay.on('beforeNavigate', sendUnloadEvent);
+		createMark(MARK_NAVIGATION_START);
+
+		if (!loadingStartMarks.length) {
+			const createLoadMark = createMark.bind(null, MARK_LOAD_EVENT_START);
+
+			createMark(MARK_LOAD_EVENT_START);
+			window.Liferay.on('beforeNavigate', createLoadMark);
+		}
 
 		if (document.readyState === 'complete') {
 			sendLoadEvent();
 		}
+
+		window.Liferay.once('beforeNavigate', sendUnloadEvent);
 	}
 }
 

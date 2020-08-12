@@ -33,30 +33,25 @@ function dxp(analytics) {
 	 * Sends view duration information on the window unload event
 	 */
 	function sendUnloadEvent() {
-		const duration = getDuration(MARK_VIEW_DURATION, MARK_NAVIGATION_START);
-
-		const props = {
-			viewDuration: duration,
-		};
-
-		analytics.send('pageUnloaded', pageApplicationId, props);
+		analytics.send('pageUnloaded', pageApplicationId, {
+			viewDuration: getDuration(
+				MARK_VIEW_DURATION,
+				MARK_NAVIGATION_START
+			),
+		});
 	}
 
 	/**
 	 * Sends page load information on the endNavigate event when SPA is enabled on DXP
 	 */
 	function sendLoadEvent() {
-		const duration = getDuration(
-			MARK_PAGE_LOAD_TIME,
-			MARK_LOAD_EVENT_START,
-			MARK_NAVIGATION_START
-		);
-
-		const props = {
-			pageLoadTime: duration,
-		};
-
-		analytics.send('pageLoaded', pageApplicationId, props);
+		analytics.send('pageLoaded', pageApplicationId, {
+			pageLoadTime: getDuration(
+				MARK_PAGE_LOAD_TIME,
+				MARK_LOAD_EVENT_START,
+				MARK_NAVIGATION_START
+			),
+		});
 	}
 
 	if (window.Liferay && window.Liferay.SPA) {

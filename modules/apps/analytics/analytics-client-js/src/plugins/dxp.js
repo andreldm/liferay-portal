@@ -18,16 +18,9 @@ import {
 	MARK_PAGE_LOAD_TIME,
 	MARK_VIEW_DURATION,
 } from '../utils/constants';
+import {createMark, getDuration} from '../utils/performance';
 
 const pageApplicationId = 'Page';
-
-function getDuration(measureName, startMark, endMark = undefined) {
-	window.performance.measure(measureName, startMark, endMark);
-
-	const {duration} = window.performance.getEntriesByName(measureName).pop();
-
-	return ~~duration;
-}
 
 /**
  * Plugin function that registers listeners related to DXP

@@ -153,7 +153,7 @@ class Client {
 	}
 
 	/**
-	 * Resetinterval time and restart processing loop
+	 * Reset interval time and restart processing loop
 	 */
 	onRequestSuccess() {
 		this.attemptNumber = 1;
@@ -165,8 +165,8 @@ class Client {
 	}
 
 	/**
-	 * Go through the queue and send the messages.
-	 * If a queue fail the processing loop isdelayed
+	 * Go through queues and send their messages.
+	 * If a queue fail, the processing loop is delayed
 	 * and the next queues are not processed.
 	 *
 	 * Note: Because we are using a ProcessLock, no other process should

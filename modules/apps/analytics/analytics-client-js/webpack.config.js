@@ -12,7 +12,6 @@
  * details.
  */
 
-const webpack = require('webpack');
 const buildFolder = `${__dirname}/build`;
 const buildName = 'analytics-all-min.js';
 
@@ -47,5 +46,4 @@ module.exports = {
 		filename: buildName,
 		path: buildFolder,
 	},
-	plugins: [new webpack.optimize.ModuleConcatenationPlugin()],
 };

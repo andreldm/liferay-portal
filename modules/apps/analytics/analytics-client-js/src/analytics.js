@@ -14,7 +14,7 @@
 
 // Gateway
 
-import uuidv1 from 'uuid/v1';
+import uuidv4 from 'uuid/v4';
 
 import Client from './client';
 import EventQueue from './eventQueue';
@@ -306,7 +306,7 @@ class Analytics {
 	 * @returns {string} The generated id
 	 */
 	_generateUserId() {
-		const userId = uuidv1();
+		const userId = uuidv4();
 
 		setItem(STORAGE_KEY_USER_ID, userId);
 		this._setCookie(STORAGE_KEY_USER_ID, userId);

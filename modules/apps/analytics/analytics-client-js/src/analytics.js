@@ -24,7 +24,6 @@ import defaultPlugins from './plugins/defaults';
 import {
 	FLUSH_INTERVAL,
 	QUEUE_PRIORITY_IDENTITY,
-	STORAGE_KEY_CONTEXTS,
 	STORAGE_KEY_EVENTS,
 	STORAGE_KEY_IDENTITY,
 	STORAGE_KEY_MESSAGE_IDENTITY,
@@ -32,7 +31,7 @@ import {
 } from './utils/constants';
 import {normalizeEvent} from './utils/events';
 import hash from './utils/hash';
-import {getItem, setItem} from './utils/storage';
+import {getContexts, getItem, setContexts, setItem} from './utils/storage';
 
 // Constants
 
@@ -191,7 +190,12 @@ class Analytics {
 	 * Set stored context to the current context.
 	 */
 	resetContext() {
-		setItem(STORAGE_KEY_CONTEXTS, [this._getContext()]);
+		const context = this._getContext();
+
+		const contextsMap = new Map();
+		contextsMap.set(hash(context), context);
+
+		setContexts(contextsMap);
 	}
 
 	/**
@@ -315,15 +319,12 @@ class Analytics {
 	_getCurrentContextHash() {
 		const currentContext = this._getContext();
 		const currentContextHash = hash(currentContext);
+		const contextsMap = getContexts();
 
-		const storedContexts = getItem(STORAGE_KEY_CONTEXTS) || [];
+		if (!contextsMap.has(currentContextHash)) {
+			contextsMap.set(currentContextHash, currentContext);
 
-		const hasStoredContext = storedContexts.find(
-			(storedContext) => hash(storedContext) === currentContextHash
-		);
-
-		if (!hasStoredContext) {
-			setItem(STORAGE_KEY_CONTEXTS, [...storedContexts, currentContext]);
+			setContexts(contextsMap);
 		}
 
 		return currentContextHash;

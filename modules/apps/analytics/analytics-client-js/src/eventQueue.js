@@ -23,8 +23,13 @@ import {
 	STORAGE_KEY_MESSAGES,
 } from './utils/constants';
 import {sortByEventDate} from './utils/events';
-import hash from './utils/hash';
-import {getItem, setItem, verifyStorageLimitForKey} from './utils/storage';
+import {getMapKeys} from './utils/map';
+import {
+	getContexts,
+	getItem,
+	setItem,
+	verifyStorageLimitForKey,
+} from './utils/storage';
 
 /**
  * An Analytics Event.
@@ -158,7 +163,7 @@ class EventQueue {
 
 		lock.acquireLock(this.keys.eventQueue).then((success) => {
 			if (success) {
-				const storedContexts = getItem(this.keys.contexts) || [];
+				const storedContexts = getContexts();
 				const eventsByContextHash = this._groupEventsByContextHash(
 					this.getEvents()
 				);
@@ -212,7 +217,7 @@ class EventQueue {
 	_getEventsWithNoStoredContext(contextHashEventMap, storedContexts) {
 		let retVal = [];
 
-		const storedContextHashes = storedContexts.map(hash);
+		const storedContextHashes = getMapKeys(storedContexts);
 
 		for (const contextHash in contextHashEventMap) {
 			if (storedContextHashes.indexOf(contextHash) === -1) {
@@ -281,23 +286,27 @@ class EventQueue {
 		storedContexts,
 		userId
 	) {
-		return Promise.all(
-			storedContexts.map((context) => {
-				const events = contextHashEventMap[hash(context)];
+		const promisesArr = [];
 
-				if (!events) {
-					return;
-				}
+		storedContexts.forEach((context, hash) => {
+			const events = contextHashEventMap[hash];
 
-				return this._messageQueue.addItem(
+			if (!events) {
+				return;
+			}
+
+			promisesArr.push(
+				this._messageQueue.addItem(
 					this._createMessage({
 						context,
 						events,
 						userId,
 					})
-				);
-			})
-		);
+				)
+			);
+		});
+
+		return Promise.all(promisesArr);
 	}
 
 	reset(events = []) {

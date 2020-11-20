@@ -18,16 +18,11 @@ const buildName = 'analytics-all-min.js';
 
 module.exports = {
 	entry: [
-		'core-js/fn/array/from',
-		'core-js/fn/array/find',
 		'core-js/fn/array/includes',
-		'core-js/fn/math/sign',
-		'core-js/fn/math/trunc',
-		'core-js/fn/string/includes',
-		'core-js/fn/string/pad-start',
-		'core-js/es6/symbol',
+		'core-js/fn/object/assign',
 		'core-js/fn/promise',
-		'whatwg-fetch',
+		'core-js/fn/string/includes',
+		'unfetch/polyfill',
 		'./src/analytics.js',
 	],
 	mode: 'production',

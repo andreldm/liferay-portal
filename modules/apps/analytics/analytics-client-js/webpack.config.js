@@ -34,8 +34,8 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				exclude: /(node_modules)/,
-				test: /\.js$/,
+				exclude: /node_modules\/(?!unfetch\/)/,
+				test: /\.m?js$/,
 				use: {
 					loader: 'babel-loader',
 					options: {

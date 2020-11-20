@@ -55,9 +55,7 @@ class Client {
 	 * @returns {Object} Parameters of the request to be sent.
 	 */
 	_getRequestParameters() {
-		const headers = new Headers();
-
-		headers.append('Content-Type', 'application/json');
+		const headers = {'Content-Type': 'application/json'};
 
 		return {
 			cache: 'default',

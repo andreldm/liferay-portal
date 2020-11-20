@@ -12,13 +12,34 @@
  * details.
  */
 
+import sha256 from 'hash.js/lib/hash/sha/256';
 import objectHash from 'object-hash';
 
-const hash = (value) =>
+function sortObj(obj) {
+	return Object.keys(obj)
+		.sort()
+		.reduce((acc, cur) => {
+			acc[cur] = obj[cur];
+
+			return acc;
+		}, {});
+}
+
+function hash(value) {
+	let toHash = value;
+
+	if (typeof value === 'object') {
+		toHash = JSON.stringify(sortObj(value));
+	}
+
+	return sha256().update(toHash).digest('hex');
+}
+
+const legacyHash = (value) =>
 	objectHash(value, {
 		algorithm: 'md5',
 		unorderedObjects: true,
 	});
 
-export {hash};
+export {hash, legacyHash};
 export default hash;

@@ -99,10 +99,13 @@ class Client {
 	 * Send a request with given payload and url.
 	 */
 	send({payload, url}) {
-		return fetch(url, {
-			...this._getRequestParameters(),
+		const parameters = this._getRequestParameters();
+
+		Object.assign(parameters, {
 			body: JSON.stringify(payload),
-		}).then(this._validateResponse);
+		});
+
+		return fetch(url, parameters).then(this._validateResponse);
 	}
 
 	/**
@@ -120,7 +123,7 @@ class Client {
 	 * @param {QueueConfig} config
 	 */
 	addQueue(queueInstance, config) {
-		this.queues.push({instance: queueInstance, ...config});
+		this.queues.push(Object.assign(config, {instance: queueInstance}));
 		this.queues.sort(this._prioritize);
 	}
 
@@ -206,13 +209,7 @@ class Client {
 							}
 
 							return Promise.all(
-								messages.map(({item, ...newItem}) => {
-									let payload = newItem;
-
-									if (item) {
-										payload = item;
-									}
-
+								messages.map((payload) => {
 									return this.sendWithTimeout({
 										payload,
 										timeout: REQUEST_TIMEOUT,

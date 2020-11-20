@@ -103,12 +103,15 @@ class EventQueue {
 	 * @returns {AnalyticsMessage}
 	 */
 	_createMessage({context, events, userId}) {
-		const {channelId, ...updatedContext} = context;
+		const {channelId} = context;
+
+		delete context.channelId;
+
 		const {dataSourceId} = this.analyticsInstance.config;
 
 		return {
 			channelId,
-			context: updatedContext,
+			context,
 			dataSourceId,
 			events,
 			id: uuidv4(),
@@ -133,7 +136,7 @@ class EventQueue {
 	_enqueue(event) {
 		const queue = this.getEvents();
 
-		setItem(this.keys.eventQueue, [...queue, event]);
+		setItem(this.keys.eventQueue, queue.concat([event]));
 	}
 
 	/**

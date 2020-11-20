@@ -424,6 +424,10 @@ class Analytics {
 	_sendIdentity(identity, userId) {
 		const {channelId, dataSourceId} = this.config;
 
+		if (identity.email) {
+			Object.assign(identity, {email: hash(identity.email)});
+		}
+
 		const newIdentityHash = this._getIdentityHash(
 			dataSourceId,
 			identity,

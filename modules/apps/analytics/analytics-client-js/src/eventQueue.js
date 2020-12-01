@@ -294,19 +294,17 @@ class EventQueue {
 		storedContexts.forEach((context, hash) => {
 			const events = contextHashEventMap[hash];
 
-			if (!events) {
-				return;
+			if (events) {
+				promisesArr.push(
+					this._messageQueue.addItem(
+						this._createMessage({
+							context,
+							events,
+							userId,
+						})
+					)
+				);
 			}
-
-			promisesArr.push(
-				this._messageQueue.addItem(
-					this._createMessage({
-						context,
-						events,
-						userId,
-					})
-				)
-			);
 		});
 
 		return Promise.all(promisesArr);

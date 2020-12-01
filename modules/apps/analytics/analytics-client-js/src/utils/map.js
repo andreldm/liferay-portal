@@ -15,9 +15,7 @@
 function convertMapToArr(mapInstance) {
 	const arr = [];
 
-	mapInstance.forEach((value, key) => {
-		arr.push([key, value]);
-	});
+	mapInstance.forEach((value, key) => arr.push([key, value]));
 
 	return arr;
 }
@@ -25,9 +23,7 @@ function convertMapToArr(mapInstance) {
 function getMapKeys(mapInstance) {
 	const arr = [];
 
-	mapInstance.forEach((value, key) => {
-		arr.push(key);
-	});
+	mapInstance.forEach((value, key) => arr.push(key));
 
 	return arr;
 }

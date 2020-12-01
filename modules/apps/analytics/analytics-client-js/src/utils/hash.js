@@ -15,11 +15,18 @@
 import sha256 from 'hash.js/lib/hash/sha/256';
 import objectHash from 'object-hash';
 
-function sortObj(obj) {
+function sort(obj) {
+	if (typeof obj !== 'object' || !obj) {
+		return obj;
+	}
+	else if (Array.isArray(obj)) {
+		return obj.sort().map(sort);
+	}
+
 	return Object.keys(obj)
 		.sort()
 		.reduce((acc, cur) => {
-			acc[cur] = obj[cur];
+			acc[cur] = sort(obj[cur]);
 
 			return acc;
 		}, {});
@@ -29,7 +36,7 @@ function hash(value) {
 	let toHash = value;
 
 	if (typeof value === 'object') {
-		toHash = JSON.stringify(sortObj(value));
+		toHash = JSON.stringify(sort(value));
 	}
 
 	return sha256().update(toHash).digest('hex');

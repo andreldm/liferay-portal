@@ -207,15 +207,15 @@ class Client {
 							}
 
 							return Promise.all(
-								messages.map((payload) => {
-									return this.sendWithTimeout({
+								messages.map((payload) =>
+									this.sendWithTimeout({
 										payload,
 										timeout: REQUEST_TIMEOUT,
 										url: endpointUrl,
 									}).then(() => {
 										queue._dequeue(payload.id);
-									});
-								})
+									})
+								)
 							)
 								.then(() => {
 									this.onRequestSuccess();

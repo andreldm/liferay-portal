@@ -42,11 +42,12 @@ function hash(value) {
 	return sha256().update(toHash).digest('hex');
 }
 
-const legacyHash = (value) =>
-	objectHash(value, {
+function legacyHash(value) {
+	return objectHash(value, {
 		algorithm: 'md5',
 		unorderedObjects: true,
 	});
+}
 
 export {hash, legacyHash};
 export default hash;

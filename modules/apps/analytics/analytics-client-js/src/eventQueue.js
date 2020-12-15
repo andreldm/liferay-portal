@@ -22,14 +22,10 @@ import {
 	STORAGE_KEY_CONTEXTS,
 	STORAGE_KEY_MESSAGES,
 } from './utils/constants';
+import {getContexts} from './utils/contexts';
 import {sortByEventDate} from './utils/events';
 import {getMapKeys} from './utils/map';
-import {
-	getContexts,
-	getItem,
-	setItem,
-	verifyStorageLimitForKey,
-} from './utils/storage';
+import {getItem, setItem, verifyStorageLimitForKey} from './utils/storage';
 
 /**
  * An Analytics Event.

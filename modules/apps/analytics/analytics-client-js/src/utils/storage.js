@@ -14,10 +14,6 @@
 
 import ProcessLock from 'browser-tabs-lock';
 
-import {STORAGE_KEY_CONTEXTS} from './constants';
-import {legacyHash} from './hash';
-import {convertMapToArr} from './map';
-
 const getItem = (key) => {
 	let data;
 	const item = localStorage.getItem(key);
@@ -83,39 +79,4 @@ const verifyStorageLimitForKey = (storageKey, limit) => {
 	});
 };
 
-/**
- * !Array.isArray(storedContextKvArr[0]) is to convert contexts after migration
- * from Array to Map, it should be removed when removing object-hash after some
- * time in production.
- */
-const getContexts = (contextStorageKey = STORAGE_KEY_CONTEXTS) => {
-	const storedContextKvArr = getItem(contextStorageKey);
-
-	const storedContexts = new Map();
-
-	if (storedContextKvArr && !Array.isArray(storedContextKvArr[0])) {
-		storedContextKvArr.forEach((context) =>
-			storedContexts.set(legacyHash(context), context)
-		);
-	}
-	else if (storedContextKvArr) {
-		storedContextKvArr.forEach(([key, value]) =>
-			storedContexts.set(key, value)
-		);
-	}
-
-	return storedContexts;
-};
-
-const setContexts = (contextsMap, contextStorageKey = STORAGE_KEY_CONTEXTS) => {
-	setItem(contextStorageKey, convertMapToArr(contextsMap));
-};
-
-export {
-	getItem,
-	getStorageSizeInKb,
-	getContexts,
-	setContexts,
-	setItem,
-	verifyStorageLimitForKey,
-};
+export {getItem, getStorageSizeInKb, setItem, verifyStorageLimitForKey};

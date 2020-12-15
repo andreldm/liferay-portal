@@ -29,9 +29,10 @@ import {
 	STORAGE_KEY_MESSAGE_IDENTITY,
 	STORAGE_KEY_USER_ID,
 } from './utils/constants';
+import {getContexts, setContexts} from './utils/contexts';
 import {normalizeEvent} from './utils/events';
 import hash from './utils/hash';
-import {getContexts, getItem, setContexts, setItem} from './utils/storage';
+import {getItem, setItem} from './utils/storage';
 
 // Constants
 

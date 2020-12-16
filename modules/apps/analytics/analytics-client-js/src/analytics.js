@@ -270,14 +270,18 @@ class Analytics {
 			return;
 		}
 
-		if (identity.email) {
-			Object.assign(identity, {email: hash(identity.email)});
+		if (!identity.email) {
+			return console.error(
+				'Unable to send identity message due invalid email'
+			);
 		}
 
-		this.config.identity = identity;
+		const hashedIdentity = {email: hash(identity.email)};
+
+		this.config.identity = hashedIdentity;
 
 		return this._getUserId().then((userId) =>
-			this._sendIdentity(identity, userId)
+			this._sendIdentity(hashedIdentity, userId)
 		);
 	}
 

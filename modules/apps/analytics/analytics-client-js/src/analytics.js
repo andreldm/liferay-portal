@@ -33,6 +33,7 @@ import {getContexts, setContexts} from './utils/contexts';
 import {normalizeEvent} from './utils/events';
 import hash from './utils/hash';
 import {getItem, setItem} from './utils/storage';
+import {upgradeStorage} from './utils/storage_version';
 
 // Constants
 
@@ -81,6 +82,10 @@ class Analytics {
 
 		this._initializeEventQueue();
 		this._initializeIdentityQueue();
+
+		// Upgrade storage
+
+		upgradeStorage();
 
 		// Initializes default plugins
 

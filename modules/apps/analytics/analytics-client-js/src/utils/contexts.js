@@ -13,7 +13,6 @@
  */
 
 import {STORAGE_KEY_CONTEXTS} from './constants';
-import {legacyHash} from './hash';
 import {convertMapToArr} from './map';
 import {getItem, setItem} from './storage';
 
@@ -27,12 +26,7 @@ const getContexts = (contextStorageKey = STORAGE_KEY_CONTEXTS) => {
 
 	const storedContexts = new Map();
 
-	if (storedContextKvArr && !Array.isArray(storedContextKvArr[0])) {
-		storedContextKvArr.forEach((context) =>
-			storedContexts.set(legacyHash(context), context)
-		);
-	}
-	else if (storedContextKvArr) {
+	if (storedContextKvArr) {
 		storedContextKvArr.forEach(([key, value]) =>
 			storedContexts.set(key, value)
 		);

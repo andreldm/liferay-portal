@@ -437,6 +437,7 @@ class Analytics {
 	 */
 	_sendIdentity(identity, userId) {
 		const {channelId, dataSourceId} = this.config;
+		const {emailAddressHashed} = identity;
 
 		const newIdentityHash = this._getIdentityHash(
 			dataSourceId,
@@ -453,8 +454,8 @@ class Analytics {
 			instance._identityQueue.addItem({
 				channelId,
 				dataSourceId,
+				emailAddressHashed,
 				id: newIdentityHash,
-				identity,
 				userId,
 			});
 

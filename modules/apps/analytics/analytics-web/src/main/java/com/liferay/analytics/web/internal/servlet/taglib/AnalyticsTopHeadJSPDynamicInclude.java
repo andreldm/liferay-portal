@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -177,6 +178,10 @@ public class AnalyticsTopHeadJSPDynamicInclude extends BaseJSPDynamicInclude {
 			return false;
 		}
 
+		if (_isConfigurationPortlet(httpServletRequest)) {
+			return false;
+		}
+
 		Company company = themeDisplay.getCompany();
 
 		if (Validator.isNull(_getLiferayAnalyticsDataSourceId(company)) ||
@@ -210,6 +215,21 @@ public class AnalyticsTopHeadJSPDynamicInclude extends BaseJSPDynamicInclude {
 		if (liferayAnalyticsEnableAllGroupIds ||
 			ArrayUtil.contains(
 				liferayAnalyticsGroupIds, String.valueOf(group.getGroupId()))) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean _isConfigurationPortlet(
+		HttpServletRequest httpServletRequest) {
+
+		String portletId = ParamUtil.getString(httpServletRequest, "p_p_id");
+
+		if (portletId.equals(
+				"com_liferay_portlet_configuration_web_portlet_" +
+					"PortletConfigurationPortlet")) {
 
 			return true;
 		}
